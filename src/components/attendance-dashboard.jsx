@@ -1,5 +1,5 @@
 // AttendanceDashboard.jsx
-import { Button } from "./ui/Button"
+import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card"
 import { CheckCircleIcon, ClockIcon, CalendarIcon, QRCodeIcon } from "./icons"
 

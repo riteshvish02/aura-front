@@ -5,7 +5,7 @@ import jsQR from "jsqr"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import axios from "../utils/Axios"
-import { Button } from "./ui/Button"
+import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card"
 import { QRCodeIcon, LocationIcon, SmartphoneIcon } from "./icons"
 
