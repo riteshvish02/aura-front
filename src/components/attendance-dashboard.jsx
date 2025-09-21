@@ -1,6 +1,6 @@
 // AttendanceDashboard.jsx
 import { Button } from "./ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { CheckCircleIcon, ClockIcon, CalendarIcon, QRCodeIcon } from "./icons"
 
 export default function AttendanceDashboard({ studentId, onScanQR, onLogout }) {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import axios from "../utils/Axios"
 import { Button } from "./ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { QRCodeIcon, LocationIcon, SmartphoneIcon } from "./icons"
 
 
