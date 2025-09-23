@@ -3,16 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { userLogout } from '../../store/actions/useraction';
-import { BookOpen, Users, CalendarDays, LogOut, Plus, Settings, List, Edit } from 'lucide-react';
+import { BookOpen, Users, CalendarDays, LogOut, Plus, Settings, List, Edit, BarChart3, CheckCircle, ClipboardList, FileText, MessageCircle, FileTextIcon } from 'lucide-react';
 
 const teacherSidebarItems = [
-    { name: 'Dashboard', icon: BookOpen, path: '/admin/dashboard' },
-    { name: 'Schedule', icon: List, path: '/admin/schedule' },
-    { name: 'Today', icon: CalendarDays, path: '/admin/today' },
-    { name: 'Attendance', icon: CalendarDays, path: '/admin/daily-attendance' },
-    { name: 'Add Schedule', icon: Plus, path: '/admin/add-schedule' },
-    { name: 'Students', icon: Users, path: '/admin/students' },
-    { name: 'Settings', icon: Settings, path: '/admin/settings' },
+    { name: 'Dashboard', icon: BookOpen, path: '/admin/dashboard' }, { name: 'Schedule', icon: List, path: '/admin/schedule' }, { name: 'Today', icon: CalendarDays, path: '/admin/today' }, { name: 'Attendance', icon: CalendarDays, path: '/admin/daily-attendance' },   { name: 'Students', icon: Users, path: '/admin/students' }, { 
+    name: 'Assignments & Resources', 
+    icon: FileTextIcon, 
+    path: '/admin/assignments' 
+  },
+  { 
+    name: 'Feedback & Support', 
+    icon: MessageCircle, 
+    path: '/admin/feedback' 
+  }, { name: 'Settings', icon: Settings, path: '/admin/settings' }
 ];
 
 const TeacherAdminLayout = () => {
@@ -50,11 +53,10 @@ const TeacherAdminLayout = () => {
                                 <Link
                                     key={index}
                                     to={item.path}
-                                    className={`flex items-center px-4 py-3 text-md font-medium rounded-md transition-colors ${
-                                        isActive
-                                            ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' 
-                                            : 'text-gray-700 hover:bg-gray-50'
-                                    }`}
+                                    className={`flex items-center px-4 py-3 text-md font-medium rounded-md transition-colors ${isActive
+                                        ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
+                                        : 'text-gray-700 hover:bg-gray-50'
+                                        }`}
                                 >
                                     <item.icon className="h-5 w-5 mr-3" />
                                     {item.name}
@@ -71,8 +73,8 @@ const TeacherAdminLayout = () => {
                     <div className="px-6 py-4">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-sm text-gray-600">
-                                    Welcome : <span className="font-medium text-gray-900">
+                                <h2 className="text-sm font-bold text-gray-600">
+                                    Welcome : <span className="font-bold font-medium text-gray-900">
                                         {user?.name || user?.email || 'Teacher'}
                                     </span>
                                 </h2>

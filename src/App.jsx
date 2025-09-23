@@ -12,10 +12,21 @@ import TeacherScheduleDashboard from './pages/teacher/TeacherScheduleDashboard';
 import TodaySchedule from './pages/teacher/TodaySchedule';
 import StudentDashboard from './components/student-dashboard';
 import Protectedroute from './components/Protectedroute';
+import Dashboard from './pages/Dashboard/Dashboard';
+import StudentList from './pages/student/StudentList';
+import FeedbackSupport from './pages/Dashboard/FeedbackSupport';
+import AssignmentsPage from './pages/teacher/AssignmentsPage';
+import SettingsPage from './pages/Dashboard/SettingsPage';
+import AdminDailyAttendancePage from './pages/Dashboard/DailyAttendancePage';
 
 const adminPages = [
-  { path: 'dashboard', element: <TeacherScheduleDashboard /> },
+  { path: 'dashboard', element: <Dashboard /> },
   { path: 'schedule', element: <TeacherScheduleDashboard /> },
+  { path: 'students', element: <StudentList /> },
+  { path: 'assignments', element: <AssignmentsPage /> },
+  { path: 'daily-attendance', element: <AdminDailyAttendancePage /> },
+  { path: 'feedback', element: <FeedbackSupport /> },
+  { path: 'settings', element: <SettingsPage /> },
   // Add more admin pages here as needed
 ];
 
@@ -27,7 +38,7 @@ const App = () => (
         <SubjectsDashboard />
       </Protectedroute>
     } />
-
+  
     <Route path='/student-dashboard' element={
       <Protectedroute>
         <StudentDashboard />

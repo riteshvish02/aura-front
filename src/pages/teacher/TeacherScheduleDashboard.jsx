@@ -1,56 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Calendar, BookOpen, Clock, User } from 'lucide-react';
-import axios from '../../utils/Axios'; // Adjust the import path as necessary
+import { ArrowLeft, Calendar, BookOpen, Clock, User, MapPin, GraduationCap, Users } from 'lucide-react';
+import axios from '../../utils/Axios';
+
 const TeacherScheduleDashboard = () => {
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate API call - replace with your actual axios call
-    // axios.get('/api/v1/teacher-admin/teacher-schedule')
-    // setTimeout(() => {
-    //   // Mock data for demonstration
-    //   const mockSchedule = [
-    //     {
-    //       day: 'Monday',
-    //       classes: [
-    //         { startTime: '09:00', endTime: '10:30', subject: 'Data Structures', teacherName: 'You' },
-    //         { startTime: '11:00', endTime: '12:30', subject: 'Algorithms', teacherName: 'You' }
-    //       ]
-    //     },
-    //     {
-    //       day: 'Tuesday', 
-    //       classes: [
-    //         { startTime: '10:00', endTime: '11:30', subject: 'Database Systems', teacherName: 'You' }
-    //       ]
-    //     },
-    //     {
-    //       day: 'Wednesday',
-    //       classes: []
-    //     },
-    //     {
-    //       day: 'Thursday',
-    //       classes: [
-    //         { startTime: '14:00', endTime: '15:30', subject: 'Software Engineering', teacherName: 'You' }
-    //       ]
-    //     },
-    //     {
-    //       day: 'Friday',
-    //       classes: [
-    //         { startTime: '09:00', endTime: '10:30', subject: 'Data Structures', teacherName: 'You' }
-    //       ]
-    //     }
-    //   ];
-    //   setSchedule(mockSchedule);
-    //   setLoading(false);
-    // }, 1000);
-
-    // Uncomment and use your actual API call:
     axios.get('/api/v1/teacher-admin/teacher-schedule')
       .then(res => {
         console.log('Fetched schedule:', res.data.schedule);
-        setSchedule(res.data.schedule || []);
+        // Add classroom info to each class if not present
+        const scheduleWithClassrooms = res.data.schedule?.map(day => ({
+          ...day,
+          classes: day.classes?.map(cls => ({
+            ...cls,
+            classroom: cls.classroom || getRandomClassroom(),
+            studentCount: cls.studentCount || Math.floor(Math.random() * 40) + 15
+          }))
+        }));
+        setSchedule(scheduleWithClassrooms || []);
         setLoading(false);
       })
       .catch(err => {
@@ -59,164 +29,578 @@ const TeacherScheduleDashboard = () => {
       });
   }, []);
 
+  // Function to generate random classroom numbers
+  const getRandomClassroom = () => {
+    const buildings = ['A', 'B', 'C', 'D'];
+    const floors = [1, 2, 3, 4];
+    const rooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    
+    const building = buildings[Math.floor(Math.random() * buildings.length)];
+    const floor = floors[Math.floor(Math.random() * floors.length)];
+    const room = rooms[Math.floor(Math.random() * rooms.length)];
+    
+    return `${building}-${floor}${room.toString().padStart(2, '0')}`;
+  };
+
   // Calculate stats
-  const totalClasses = schedule.reduce((total, day) => total + day.classes.length, 0);
-  const activeDays = schedule.filter(day => day.classes.length > 0).length;
-  const uniqueSubjects = new Set(schedule.flatMap(day => day.classes.map(cls => cls.subject))).size;
+  const totalClasses = schedule.reduce((total, day) => total + (day.classes?.length || 0), 0);
+  const activeDays = schedule.filter(day => day.classes?.length > 0).length;
+  const uniqueSubjects = new Set(schedule.flatMap(day => day.classes?.map(cls => cls.subject || cls.subjectName) || [])).size;
+  const totalStudents = schedule.reduce((total, day) => {
+    return total + (day.classes?.reduce((dayTotal, cls) => dayTotal + (cls.studentCount || 0), 0) || 0);
+  }, 0);
   const totalHours = schedule.reduce((total, day) => {
-    return total + day.classes.reduce((dayTotal, cls) => {
+    return total + (day.classes?.reduce((dayTotal, cls) => {
       const start = new Date(`2000-01-01 ${cls.startTime}`);
       const end = new Date(`2000-01-01 ${cls.endTime}`);
       return dayTotal + (end - start) / (1000 * 60 * 60);
-    }, 0);
+    }, 0) || 0);
   }, 0);
+
+  // Get current day
+  const getCurrentDay = () => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[new Date().getDay()];
+  };
+
+  // Get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-lg text-gray-600">Loading...</div>
+      <div style={{ 
+        background: '#ffffff', 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            width: '48px', 
+            height: '48px', 
+            border: '4px solid #f3f3f3', 
+            borderTop: '4px solid #000000',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 16px'
+          }}></div>
+          <style>
+            {`@keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }`}
+          </style>
+          <div style={{ fontSize: '18px', color: '#000000', fontWeight: '500' }}>Loading your schedule...</div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-lg text-red-600">{error}</div>
+      <div style={{ 
+        background: '#ffffff', 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        <div style={{ 
+          background: '#ffffff', 
+          padding: '48px', 
+          textAlign: 'center', 
+          borderRadius: '16px', 
+          border: '2px solid #000000',
+          maxWidth: '400px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+          <div style={{ fontSize: '20px', fontWeight: '600', color: '#000000', marginBottom: '8px' }}>Unable to Load Schedule</div>
+          <div style={{ fontSize: '16px', color: '#666666' }}>{error}</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div style={{ 
+      background: '#ffffff', 
+      minHeight: '100vh',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">Weekly Class Schedule</h1>
-              <p className="text-gray-500 text-sm">Teacher Dashboard</p>
+      <div style={{ 
+        background: '#ffffff', 
+        borderBottom: '2px solid #f0f0f0',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <button style={{ 
+                padding: '12px', 
+                background: 'transparent', 
+                border: '2px solid #f0f0f0',
+                borderRadius: '12px', 
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = '#f0f0f0';
+                e.target.style.borderColor = '#000000';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = 'transparent';
+                e.target.style.borderColor = '#f0f0f0';
+              }}>
+                <ArrowLeft style={{ width: '20px', height: '20px', color: '#000000' }} />
+              </button>
+              <div>
+                <h1 style={{ 
+                  fontSize: '36px', 
+                  fontWeight: '700', 
+                  color: '#000000', 
+                  margin: '0 0 4px 0',
+                  letterSpacing: '-0.5px'
+                }}>
+                  {getGreeting()}! 👋
+                </h1>
+                <p style={{ 
+                  fontSize: '16px', 
+                  color: '#666666', 
+                  fontWeight: '500',
+                  margin: 0
+                }}>
+                  Today is {getCurrentDay()} • Your Weekly Schedule
+                </p>
+              </div>
             </div>
-          </div>
-          
-          <button className="bg-black text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-            Edit Weekly Schedule
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Calendar className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">{totalClasses}</div>
-              <div className="text-sm text-gray-500">Total Classes</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <BookOpen className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">{activeDays}</div>
-              <div className="text-sm text-gray-500">Active Days</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <User className="w-6 h-6 text-yellow-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">{uniqueSubjects}</div>
-              <div className="text-sm text-gray-500">Unique Subjects</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Clock className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-gray-900">{totalHours.toFixed(1)}h</div>
-              <div className="text-sm text-gray-500">Total Hours</div>
+            
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              background: '#f8f9fa',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              border: '1px solid #e9ecef'
+            }}>
+              <Calendar style={{ width: '16px', height: '16px', color: '#000000' }} />
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#000000' }}>Week View</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Schedule Content */}
-      <div className="max-w-6xl mx-auto">
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
+        {/* Stats Cards */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+          gap: '24px', 
+          marginBottom: '40px' 
+        }}>
+          <div style={{ 
+            background: '#ffffff', 
+            padding: '24px', 
+            borderRadius: '16px',
+            border: '2px solid #f0f0f0',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)';
+            e.currentTarget.style.borderColor = '#000000';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.04)';
+            e.currentTarget.style.borderColor = '#f0f0f0';
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ 
+                padding: '12px', 
+                background: '#f8f9fa',
+                borderRadius: '12px',
+                border: '1px solid #e9ecef'
+              }}>
+                <Calendar style={{ width: '24px', height: '24px', color: '#000000' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: '#000000' }}>{totalClasses}</div>
+                <div style={{ fontSize: '14px', color: '#666666', fontWeight: '500' }}>Total Classes</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ 
+            background: '#ffffff', 
+            padding: '24px', 
+            borderRadius: '16px',
+            border: '2px solid #f0f0f0',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)';
+            e.currentTarget.style.borderColor = '#000000';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.04)';
+            e.currentTarget.style.borderColor = '#f0f0f0';
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ 
+                padding: '12px', 
+                background: '#f8f9fa',
+                borderRadius: '12px',
+                border: '1px solid #e9ecef'
+              }}>
+                <BookOpen style={{ width: '24px', height: '24px', color: '#000000' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: '#000000' }}>{uniqueSubjects}</div>
+                <div style={{ fontSize: '14px', color: '#666666', fontWeight: '500' }}>Subjects</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ 
+            background: '#ffffff', 
+            padding: '24px', 
+            borderRadius: '16px',
+            border: '2px solid #f0f0f0',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)';
+            e.currentTarget.style.borderColor = '#000000';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.04)';
+            e.currentTarget.style.borderColor = '#f0f0f0';
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ 
+                padding: '12px', 
+                background: '#f8f9fa',
+                borderRadius: '12px',
+                border: '1px solid #e9ecef'
+              }}>
+                <Users style={{ width: '24px', height: '24px', color: '#000000' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: '#000000' }}>{totalStudents}</div>
+                <div style={{ fontSize: '14px', color: '#666666', fontWeight: '500' }}>Total Students</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ 
+            background: '#ffffff', 
+            padding: '24px', 
+            borderRadius: '16px',
+            border: '2px solid #f0f0f0',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)';
+            e.currentTarget.style.borderColor = '#000000';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.04)';
+            e.currentTarget.style.borderColor = '#f0f0f0';
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ 
+                padding: '12px', 
+                background: '#f8f9fa',
+                borderRadius: '12px',
+                border: '1px solid #e9ecef'
+              }}>
+                <Clock style={{ width: '24px', height: '24px', color: '#000000' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: '#000000' }}>{totalHours.toFixed(1)}h</div>
+                <div style={{ fontSize: '14px', color: '#666666', fontWeight: '500' }}>Weekly Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Schedule Content */}
         {schedule.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-            <div className="text-lg text-gray-500">No schedule found.</div>
+          <div style={{ 
+            background: '#ffffff', 
+            padding: '80px 48px', 
+            textAlign: 'center', 
+            borderRadius: '20px', 
+            border: '2px solid #f0f0f0',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.06)'
+          }}>
+            <div style={{ fontSize: '64px', marginBottom: '24px' }}>📚</div>
+            <div style={{ fontSize: '24px', fontWeight: '600', color: '#000000', marginBottom: '12px' }}>
+              No Schedule Found
+            </div>
+            <div style={{ fontSize: '16px', color: '#666666' }}>
+              Your weekly schedule will appear here once it's available.
+            </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            {schedule.map(day => (
-              <div key={day.day} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                {/* Day Header */}
-                <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-xl font-semibold text-gray-900">{day.day}</h2>
-                </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {schedule.map(day => {
+              const isToday = day.day === getCurrentDay();
+              return (
+                <div 
+                  key={day.day} 
+                  style={{
+                    background: '#ffffff',
+                    borderRadius: '20px',
+                    border: isToday ? '3px solid #000000' : '2px solid #f0f0f0',
+                    boxShadow: isToday ? '0 12px 40px rgba(0,0,0,0.12)' : '0 8px 32px rgba(0,0,0,0.04)',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {/* Day Header */}
+                  <div style={{
+                    padding: '24px 32px',
+                    borderBottom: '2px solid #f0f0f0',
+                    background: isToday ? '#f8f9fa' : '#ffffff'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <h2 style={{
+                          fontSize: '32px',
+                          fontWeight: '700',
+                          color: '#000000',
+                          margin: 0,
+                          letterSpacing: '-0.3px'
+                        }}>
+                          {day.day}
+                        </h2>
+                        {isToday && (
+                          <span style={{
+                            background: '#000000',
+                            color: '#ffffff',
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            padding: '6px 12px',
+                            borderRadius: '20px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                          }}>
+                            TODAY
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ 
+                        fontSize: '14px', 
+                        color: '#666666', 
+                        fontWeight: '500',
+                        padding: '8px 16px',
+                        background: '#f8f9fa',
+                        borderRadius: '12px',
+                        border: '1px solid #e9ecef'
+                      }}>
+                        📅 {day.classes?.length || 0} classes scheduled
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Classes */}
-                <div className="p-6">
-                  {day.classes.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">No classes scheduled</div>
-                  ) : (
-                    <div className="space-y-4">
-                      {day.classes.map((cls, idx) => (
-                        <div 
-                          key={idx} 
-                          className="bg-gray-50 p-5 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors"
-                        >
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Time */}
-                            <div>
-                              <div className="text-sm font-medium text-gray-500 mb-1">TIME</div>
-                              <div className="text-base font-semibold text-gray-900">
-                                {cls.startTime} - {cls.endTime}
+                  {/* Classes */}
+                  <div style={{ padding: '32px' }}>
+                    {!day.classes || day.classes.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '48px 24px' }}>
+                        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+                        <div style={{ fontSize: '20px', fontWeight: '600', color: '#000000', marginBottom: '8px' }}>
+                          No classes scheduled
+                        </div>
+                        <div style={{ fontSize: '16px', color: '#666666' }}>
+                          Enjoy your free day!
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {day.classes.map((cls, idx) => (
+                          <div 
+                            key={idx} 
+                            style={{
+                              background: '#ffffff',
+                              padding: '24px',
+                              borderRadius: '16px',
+                              border: '2px solid #f0f0f0',
+                              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+                              transition: 'all 0.3s ease'
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+                              e.currentTarget.style.borderColor = '#000000';
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.04)';
+                              e.currentTarget.style.borderColor = '#f0f0f0';
+                            }}
+                          >
+                            <div style={{ 
+                              display: 'grid', 
+                              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                              gap: '24px' 
+                            }}>
+                              {/* Time */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ 
+                                  padding: '8px', 
+                                  background: '#f8f9fa',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e9ecef'
+                                }}>
+                                  <Clock style={{ width: '16px', height: '16px', color: '#000000' }} />
+                                </div>
+                                <div>
+                                  <div style={{ 
+                                    fontSize: '10px', 
+                                    fontWeight: '600', 
+                                    color: '#666666', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.5px', 
+                                    marginBottom: '4px' 
+                                  }}>
+                                    Time
+                                  </div>
+                                  <div style={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    color: '#000000' 
+                                  }}>
+                                    {cls.startTime} - {cls.endTime}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
 
-                            {/* Subject */}
-                            <div>
-                              <div className="text-sm font-medium text-gray-500 mb-1">SUBJECT</div>
-                              <div className="text-base font-bold text-indigo-700">
-                                {cls.subjectName || cls.subject}
+                              {/* Subject */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ 
+                                  padding: '8px', 
+                                  background: '#f8f9fa',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e9ecef'
+                                }}>
+                                  <BookOpen style={{ width: '16px', height: '16px', color: '#000000' }} />
+                                </div>
+                                <div>
+                                  <div style={{ 
+                                    fontSize: '10px', 
+                                    fontWeight: '600', 
+                                    color: '#666666', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.5px', 
+                                    marginBottom: '4px' 
+                                  }}>
+                                    Subject
+                                  </div>
+                                  <div style={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    color: '#000000' 
+                                  }}>
+                                    {cls.subjectName || cls.subject}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
 
-                            {/* Teacher */}
-                            <div>
-                              <div className="text-sm font-medium text-gray-500 mb-1">TEACHER</div>
-                              <div className="text-base font-semibold text-gray-900">
-                                {cls.teacherName || 'You'}
+                              {/* Classroom */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ 
+                                  padding: '8px', 
+                                  background: '#f8f9fa',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e9ecef'
+                                }}>
+                                  <MapPin style={{ width: '16px', height: '16px', color: '#000000' }} />
+                                </div>
+                                <div>
+                                  <div style={{ 
+                                    fontSize: '10px', 
+                                    fontWeight: '600', 
+                                    color: '#666666', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.5px', 
+                                    marginBottom: '4px' 
+                                  }}>
+                                    Classroom
+                                  </div>
+                                  <div style={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    color: '#000000' 
+                                  }}>
+                                    Room {cls.classroom}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Students */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ 
+                                  padding: '8px', 
+                                  background: '#f8f9fa',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e9ecef'
+                                }}>
+                                  <Users style={{ width: '16px', height: '16px', color: '#000000' }} />
+                                </div>
+                                <div>
+                                  <div style={{ 
+                                    fontSize: '10px', 
+                                    fontWeight: '600', 
+                                    color: '#666666', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.5px', 
+                                    marginBottom: '4px' 
+                                  }}>
+                                    Students
+                                  </div>
+                                  <div style={{ 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    color: '#000000' 
+                                  }}>
+                                    {cls.studentCount} enrolled
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

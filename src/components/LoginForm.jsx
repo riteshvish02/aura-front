@@ -163,8 +163,24 @@ const LoginForm = () => {
       </button>
 
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Login</h2>
-        <p className="text-gray-600">Welcome back! Please log in to your account</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Teacher Login</h2>
+        <p className="text-gray-600">Welcome back! Please log in to your teacher account</p>
+      </div>
+
+      {/* Demo Credentials Card */}
+      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 className="text-sm font-semibold text-blue-900 mb-2">Demo Credentials</h3>
+        <div className="space-y-1 text-sm text-blue-800">
+          <p><span className="font-medium">Email:</span> teacher2@example.com</p>
+          <p><span className="font-medium">Password:</span> password123</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setFormData({ email: 'teacher2@example.com', password: 'password123' })}
+          className="mt-2 text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+        >
+          Fill Demo Credentials
+        </button>
       </div>
 
       {errors.general && (
@@ -178,7 +194,7 @@ const LoginForm = () => {
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              Teacher Email
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -197,7 +213,7 @@ const LoginForm = () => {
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition duration-150 ${
                   isLoading ? 'bg-gray-50 cursor-not-allowed' : ''
                 }`}
-                placeholder="john@example.com"
+                placeholder="teacher@example.com"
               />
               {errors.email && (
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -213,7 +229,7 @@ const LoginForm = () => {
           {/* Password Field */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              Teacher Password
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -232,7 +248,7 @@ const LoginForm = () => {
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition duration-150 ${
                   isLoading ? 'bg-gray-50 cursor-not-allowed' : ''
                 }`}
-                placeholder="••••••••"
+                placeholder="Enter your password"
               />
               <button
                 type="button"
@@ -264,7 +280,7 @@ const LoginForm = () => {
               className="h-4 w-4 border-gray-300 rounded text-black focus:ring-black"
             />
             <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
-              Remember me
+              Keep me signed in
             </label>
           </div>
 
@@ -275,7 +291,7 @@ const LoginForm = () => {
                 isLoading ? 'pointer-events-none opacity-70' : ''
               }`}
             >
-              Forgot your password?
+              Forgot password?
             </a>
           </div>
         </div>
@@ -294,10 +310,10 @@ const LoginForm = () => {
             {isLoading ? (
               <div className="flex items-center space-x-2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                <span>Logging in...</span>
+                <span>Signing in...</span>
               </div>
             ) : (
-              'Login'
+              'Sign In as Teacher'
             )}
           </button>
         </div>

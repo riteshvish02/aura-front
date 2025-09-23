@@ -14,7 +14,7 @@ const AuthLayout = ({ children }) => {
       {/* Footer */}
       <footer className="w-full py-4 px-8 border-t border-gray-100 text-center">
         <p className="text-sm text-gray-600">
-          © {new Date().getFullYear()} Syneidesis. All rights reserved.
+          © {new Date().getFullYear()} CodedNull. All rights reserved.
         </p>
       </footer>
     </div>
