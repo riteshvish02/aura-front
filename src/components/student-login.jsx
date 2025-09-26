@@ -30,6 +30,24 @@ export default function StudentLogin() {
           <p className="text-slate-600">Sign in to your account</p>
         </div>
 
+        {/* Demo credentials box */}
+        <div className="mb-4 p-3 rounded-lg bg-slate-100 border border-slate-400 text-xs text-slate-700">
+          <div className="flex items-center justify-between mb-1">
+            <p className="font-medium text-slate-800">Demo Credentials:</p>
+            <Button
+              onClick={() => {
+                setRollNo("CSE2025001");
+                setName("Student One");
+              }}
+              className="h-6 px-2 text-xs bg-black hover:bg-black/90 text-white"
+            >
+              Auto Fill
+            </Button>
+          </div>
+          <p>🎓 <span className="font-semibold">Roll No:</span> CSE2025001</p>
+          <p>👤 <span className="font-semibold">Username:</span> Student One</p>
+        </div>
+
         <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-lg font-semibold text-slate-900">Student Login</CardTitle>

@@ -55,133 +55,138 @@ export default function SubjectsDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50 ">
       {/* Sidebar */}
       <div className="flex">
         <Sidebar />
 
         {/* Main Content */}
         <div className="flex-1">
-             <div className="bg-white  border-b border-border px-6 py-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h1 className="text-lg font-semibold text-black">Ritesh Vishwakarma</h1>
-                            <p className="text-xs text-gray-500 mt-0.5">Roll Number: 123456</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Link to={`/scanner`}>
-                            <Button
-                              size="sm"
-                              className="h-8 px-3 text-xs font-medium bg-black hover:bg-black/90 text-white"
-                            >
-                              <QrCodeIcon className="w-3 h-3 mr-1.5" />
-                              Scan QR
-                            </Button>
-                            </Link>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 px-3 text-xs text-black hover:text-black hover:bg-gray-100 "
-                            >
-                              <LogOutIcon className="w-3 h-3 mr-1.5" />
-                              Logout
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
+          {/* Header */}
+          <div className="bg-white border-b border-gray-200 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-lg font-semibold text-black">Ritesh Vishwakarma</h1>
+                <p className="text-sm text-gray-500 mt-0.5">Roll Number: 123456</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link to={`/scanner`}>
+                  <Button
+                    size="sm"
+                    className="h-8 px-3 text-xs font-medium bg-black hover:bg-gray-800 text-white"
+                  >
+                    <QrCodeIcon className="w-3 h-3 mr-1.5" />
+                    Scan QR
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-3 text-xs text-gray-600 hover:text-black hover:bg-gray-100"
+                >
+                  <LogOutIcon className="w-3 h-3 mr-1.5" />
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
 
           <div className="p-6 space-y-6">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg border border-border p-4">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Total Subjects</p>
-                    {/* <p className="text-xl ml-[-60px] font-semibold text-black">{mockSubjects.length}</p> */}
+                    <p className="text-sm text-gray-600">Total Subjects</p>
+                    <p className="text-2xl font-bold text-black">{mockSubjects.length}</p>
                   </div>
-                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <BookIcon className="w-4 h-4 text-black" />
+                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <BookIcon className="w-5 h-5 text-gray-600" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-border p-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Overall Attendance</p>
-                    {/* <p className="text-xl font-semibold ml-[-60px] text-black">
+                    <p className="text-sm text-gray-600">Overall Attendance</p>
+                    <p className="text-2xl font-bold text-black">
                       {Math.round(
                         mockSubjects.reduce((acc, sub) => acc + sub.attendancePercentage, 0) / mockSubjects.length,
                       )}
                       %
-                    </p> */}
+                    </p>
                   </div>
-                  <div className="w-8 h-8 bg-gray-100  rounded-lg flex items-center justify-center">
-                    <CalendarIcon className="w-4 h-4 text-black" />
+                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <CalendarIcon className="w-5 h-5 text-gray-600" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-border p-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Classes Attended</p>
-                    {/* <p className="text-xl font-semibold ml-[-60px] text-black">
+                    <p className="text-sm text-gray-600">Classes Attended</p>
+                    <p className="text-2xl font-bold text-black">
                       {mockSubjects.reduce((acc, sub) => acc + sub.attendedClasses, 0)}
-                    </p> */}
+                    </p>
                   </div>
-                  <div className="w-8 h-8 bg-gray-100  rounded-lg flex items-center justify-center">
-                    <BarChartIcon className="w-4 h-4 text-black" />
+                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <BarChartIcon className="w-5 h-5 text-gray-600" />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-medium text-black">Subjects</h2>
-                <p className="text-xs text-gray-500">{mockSubjects.length} subjects</p>
+            {/* Subjects Section */}
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="border-b border-gray-200 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-black">Subjects</h2>
+                  <p className="text-sm text-gray-500">{mockSubjects.length} subjects</p>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3">
-                {mockSubjects.map((subject) => (
-                  <Link
-                   to={`/analytics/2`}
-                    key={subject.id}
-                    className="bg-white rounded-lg border border-border hover:border-black hover:shadow-sm transition-all duration-200 cursor-pointer"
-                  >
-                    <div className="p-4">
+              <div className="p-6">
+                <div className="space-y-3">
+                  {mockSubjects.map((subject) => (
+                    <Link
+                      to={`/analytics/2`}
+                      key={subject.id}
+                      className="block p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 hover:border-gray-200 transition-all duration-200 cursor-pointer"
+                    >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-100  rounded-lg flex items-center justify-center">
-                            <BookIcon className="w-5 h-5 text-black" />
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                            <BookIcon className="w-5 h-5 text-white" />
                           </div>
-                          <div className="text-left">
-                            <h3 className="text-sm font-medium text-black">{subject.name}</h3>
-                            <p className="text-xs text-gray-500 ml-0 mt-0.5">{subject.code}</p>
+                          <div>
+                            <h3 className="font-semibold text-black">{subject.name}</h3>
+                            <p className="text-sm text-gray-500 mt-0.5">{subject.code}</p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-8">
                           <div className="text-right">
-                            <p className="text-xs text-gray-500">Attendance</p>
-                            <p className={`text-sm font-medium ${getAttendanceColor(subject.attendancePercentage)}`}>
+                            <p className="text-sm text-gray-500">Attendance</p>
+                            <p className={`text-lg font-bold ${getAttendanceColor(subject.attendancePercentage)}`}>
                               {subject.attendancePercentage}%
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-xs text-gray-500">Classes</p>
-                            <p className="text-sm font-medium text-black">
+                            <p className="text-sm text-gray-500">Classes</p>
+                            <p className="text-lg font-bold text-black">
                               {subject.attendedClasses}/{subject.totalClasses}
                             </p>
                           </div>
-                          <div className="w-6 h-6 flex items-center justify-center">
-                            <BarChartIcon className="w-4 h-4 text-black" />
+                          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <BarChartIcon className="w-4 h-4 text-gray-600" />
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

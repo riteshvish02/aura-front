@@ -46,87 +46,102 @@ function SubjectAnalytics() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="px-12 mx-auto space-y-6">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="px-6 py-8 mx-auto space-y-6">
         
         <div className="mb-2">
           <Button
             variant="ghost"
-            className="border-gray-200 border-2 hover:bg-black hover:text-white duration-300 transition-all flex items-center gap-2"
+            className="border-gray-200 border bg-white hover:bg-black hover:text-white transition-all duration-300 flex items-center gap-2"
             onClick={() => navigate(-1)}
           >
             <ArrowLeftIcon className="w-4 h-4" /> Back
           </Button>
         </div>
+
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <div>
-            <h1 className="text-2xl text-left font-semibold">{subject.name}</h1>
-            <p className="text-gray-500 text-left">{subject.code} - Analytics Dashboard</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+              <BarChartIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-black">{subject.name}</h1>
+              <p className="text-sm text-gray-500">{subject.code} - Analytics Dashboard</p>
+            </div>
           </div>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <CalendarIcon className="w-8 h-8 text-primary" />
-                <div>
-                  <p className="text-2xl text-left font-semibold">{subject.attendancePercentage}%</p>
-                  <p className="text-sm text-gray-500">Attendance Rate</p>
-                </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Attendance Rate</p>
+                <p className="text-2xl font-bold text-black">{subject.attendancePercentage}%</p>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <BarChartIcon className="w-8 h-8 text-green-600" />
-                <div>
-                  <p className="text-2xl text-left font-semibold">{subject.attendedClasses}</p>
-                  <p className="text-sm text-gray-500">Classes Attended</p>
-                </div>
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <CalendarIcon className="w-5 h-5 text-gray-600" />
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <TrendingUpIcon className="w-8 h-8 text-red-600" />
-                <div>
-                  <p className="text-2xl text-left font-semibold">{subject.totalClasses - subject.attendedClasses}</p>
-                  <p className="text-sm text-gray-500">Classes Missed</p>
-                </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Classes Attended</p>
+                <p className="text-2xl font-bold text-black">{subject.attendedClasses}</p>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <CalendarIcon className="w-8 h-8 text-blue-600" />
-                <div>
-                  <p className="text-2xl text-left font-semibold">{subject.totalClasses}</p>
-                  <p className="text-sm text-gray-500">Total Classes</p>
-                </div>
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <BarChartIcon className="w-5 h-5 text-gray-600" />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Classes Missed</p>
+                <p className="text-2xl font-bold text-black">{subject.totalClasses - subject.attendedClasses}</p>
+              </div>
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <TrendingUpIcon className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Classes</p>
+                <p className="text-2xl font-bold text-black">{subject.totalClasses}</p>
+              </div>
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <CalendarIcon className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* View Toggle */}
         <div className="flex gap-2">
           <Button
-            className={`${viewType === "chart" ? "bg-black text-white" : "bg-white text-black"} hover:bg-black hover:text-white duration-300 transition-all`}
-            variant={viewType === "chart" ? "default" : "outline"}
+            className={`${
+              viewType === "chart" 
+                ? "bg-black text-white hover:bg-gray-800" 
+                : "bg-white text-black border border-gray-200 hover:bg-black hover:text-white"
+            } transition-all duration-300`}
             onClick={() => setViewType("chart")}
           >
             Chart View
           </Button>
 
           <Button
-            className={`${viewType === "list" ? "bg-black text-white" : "bg-white text-black"} hover:bg-black hover:text-white duration-300 transition-all`}
-            variant={viewType === "list" ? "default" : "outline"}
+            className={`${
+              viewType === "list" 
+                ? "bg-black text-white hover:bg-gray-800" 
+                : "bg-white text-black border border-gray-200 hover:bg-black hover:text-white"
+            } transition-all duration-300`}
             onClick={() => setViewType("list")}
           >
             List View
@@ -136,75 +151,102 @@ function SubjectAnalytics() {
         {viewType === "chart" ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Weekly Attendance Trend */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Weekly Attendance Trend</CardTitle>
-                <CardDescription>Your attendance percentage over the weeks</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="border-b border-gray-200 px-6 py-4">
+                <h3 className="text-lg font-semibold text-black">Weekly Attendance Trend</h3>
+                <p className="text-sm text-gray-500">Your attendance percentage over the weeks</p>
+              </div>
+              <div className="p-6">
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={weeklyData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="week" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="attendance" stroke="#000000" strokeWidth={2} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                    <XAxis dataKey="week" axisLine={false} tickLine={false} />
+                    <YAxis axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'white',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="attendance" 
+                      stroke="#000000" 
+                      strokeWidth={2}
+                      dot={{ fill: '#000000', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, fill: '#000000' }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Monthly Present vs Absent */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Monthly Overview</CardTitle>
-                <CardDescription>Present vs Absent classes by month</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="border-b border-gray-200 px-6 py-4">
+                <h3 className="text-lg font-semibold text-black">Monthly Overview</h3>
+                <p className="text-sm text-gray-500">Present vs Absent classes by month</p>
+              </div>
+              <div className="p-6">
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={monthlyData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="present" fill="#000000" />
-                    <Bar dataKey="absent" fill="#6c757d" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                    <YAxis axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: 'white',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                    />
+                    <Bar dataKey="present" fill="#000000" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="absent" fill="#9ca3af" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         ) : (
-          <Card className="text-left">
-            <CardHeader>
-              <CardTitle>Recent Attendance</CardTitle>
-              <CardDescription>Your attendance record for recent classes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+          <div className="bg-white rounded-lg border border-gray-200">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <h3 className="text-lg font-semibold text-black">Recent Attendance</h3>
+              <p className="text-sm text-gray-500">Your attendance record for recent classes</p>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
                 {recentAttendance.map((record, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-4">
-                      <CalendarIcon className="w-5 h-5 text-gray-500" />
+                      <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                        <CalendarIcon className="w-5 h-5 text-white" />
+                      </div>
                       <div>
-                        <p className="font-medium">{record.date}</p>
+                        <p className="font-semibold text-black">{record.date}</p>
                         <p className="text-sm text-gray-500">
                           {record.time !== "-" ? `Marked at ${record.time}` : "No attendance"}
                         </p>
                       </div>
                     </div>
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        record.status === "Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
+               className={`inline-flex items-center px-3.5 py-1 rounded-full text-xs font-medium tracking-wide transition-colors duration-200
+  ${record.status === "Present" 
+    ? "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100" 
+    : "bg-gray-100 text-red-600 border border-gray-200 hover:bg-gray-200"
+  }`}
+
+
                     >
                       {record.status}
                     </span>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>
