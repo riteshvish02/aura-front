@@ -11,12 +11,19 @@ import { UserIcon } from "./icons"
 export default function StudentLogin() {
   const [rollNo, setRollNo] = useState("");
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!rollNo.trim() || !name.trim()) return;
-    dispatch(studentLogin({ rollNo, name }, navigate, toast));
+    
+    setIsLoading(true);
+    try {
+      await dispatch(studentLogin({ rollNo, name }, navigate, toast));
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -81,10 +88,17 @@ export default function StudentLogin() {
             </div>
             <Button
               onClick={handleLogin}
-              disabled={!rollNo.trim() || !name.trim()}
-              className="w-full h-10 text-sm font-medium bg-black hover:bg-black/90 text-white"
+              disabled={!rollNo.trim() || !name.trim() || isLoading}
+              className="w-full h-10 text-sm font-medium bg-black hover:bg-black/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Signing in...
+                </div>
+              ) : (
+                "Sign in"
+              )}
             </Button>
           </CardContent>
         </Card>
